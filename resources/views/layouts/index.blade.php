@@ -91,7 +91,7 @@
                     $("#taskModel").modal('hide');
                     $("#successMessage").append(response.message)
                     $("#taskModel").find('input,textarea').val("");
-                    fetchTask()
+                    $('.table-striped').DataTable().draw();
                 }
             }
         })
@@ -113,8 +113,35 @@
             }
         });
     })
-    
-  
+    $(document).on('click','.taskUpdate', function(e){
+        e.preventDefault();
+        let task_id =  $("#edittaskModel").find("#task_id").val();
+        let title = $("#edittaskModel").find("#title").val();
+        let description = $("#edittaskModel").find("#description").val();
+        let url = "{{route('task.update',':id')}}";
+        url = url.replace(':id',task_id)
+        $.ajax({
+            type:"POST",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url:url,
+            data:{
+              task_id,
+              title,
+              description
+            },
+            success:function(success){
+                console.log(success);
+            $(document).find("#edittaskModel").modal('hide');
+            $("#successMessage").html("");
+            $("#successMessage").addClass('alert alert-success');
+            $("#successMessage").append(success.success);
+            $('.table-striped').DataTable().draw();
+            }
+
+        })
+    })
 </script>
 
 </html>
