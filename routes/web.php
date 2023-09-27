@@ -37,3 +37,5 @@ Route::get('/task',[TaskController::class,'index'])->name('task.data');
 Route::post('/task-create',[TaskController::class,'create'])->name('task.create');
 Route::post('/task-delete/{id}',[TaskController::class,'destory'])->name('task.destory');
 
+Route::get('/task-update/{id?}',[TaskController::class,'edit'])->name('task.edit');
+Route::post('/task-update/{id?}',[TaskController::class,'update'])->name('task.update');

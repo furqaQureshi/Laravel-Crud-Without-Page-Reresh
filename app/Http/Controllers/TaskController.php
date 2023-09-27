@@ -16,14 +16,14 @@ class TaskController extends Controller
             return DataTables::of($task)
                 ->addIndexColumn()
                 ->addColumn('id', function ($row) {
-                    return '<a href="#">'.$row->id.'</a>';
+                    return '<a href="#">' . $row->id . '</a>';
                 })->addColumn('title', function ($row) {
                     return $row->title;
                 })->addColumn('description', function ($row) {
                     return $row->description;
                 })->addColumn('action', function ($row) {
                     $btn = '<a href="#" data-id="' . $row->id . '" class="edit btn btn-primary btn-sm my-2 editTask">Edit</a>';
-                    $btn = $btn . ' <a href="#" data-id="' . $row->id . '" class="btn btn-danger btn-sm deleteTask" data-toggle="modal" data-target="#edittaskModel">Delete</a>';
+                    $btn = $btn . ' <a href="#" data-id="' . $row->id . '" class="btn btn-danger btn-sm deleteTask">Delete</a>';
                     return $btn;
                 })->rawColumns(['id', 'title', 'description', 'action'])->make(true);
         }
@@ -48,17 +48,29 @@ class TaskController extends Controller
             'message' => 'Task Create SuccessFully!'
         ]);
     }
-    public function destory($id){
+    public function destory($id)
+    {
         try {
-        $task = Task::where('id',$id)->first();
-        if($task!=''){
-            $task->delete();
-            return response()->json(['success'=>'1','message'=>"Task Delete is SuccessFully!"]);
-        }
+            $task = Task::where('id', $id)->first();
+            if ($task != '') {
+                $task->delete();
+                return response()->json(['success' => '1', 'message' => "Task Delete is SuccessFully!"]);
+            }
         } catch (\Throwable $th) {
             //throw $th;
             dd($th);
         }
     }
-  
+    public function edit($id)
+    {
+        $task = Task::where('id', $id)->first();
+        return response()->json(['response'=>$task]);
+    }
+    public function update(Request $request){
+        $task = Task::find($request->id);
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->save();
+        return response()->json(['success'=>'Task Update is SuessFully..']);
+    }
 }
